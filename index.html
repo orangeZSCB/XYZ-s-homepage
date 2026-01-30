@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<!-- 
+    橙子：rather lemme go fking php
+-->
+<html lang="zh-CN" data-theme="cyberpunk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=0.5, user-scalable=no">
+    <title>橙子永远被BUG和我奴役——啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈！！！！！！！</title>
+    <style>
+        /* ==== 毁灭性的全局样式 ==== */
+        :root {
+            --error-red: #ff0066;
+            --glitch-blue: #00ffff;
+            --matrix-green: #00ff00;
+            --cyber-purple: #ff00ff;
+            --warning-yellow: #ffff00;
+            --deep-black: #0a0a0a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Comic Sans MS", "华文彩云", "微软雅黑", sans-serif !important;
+            transition: none !important;
+            animation-duration: 0.5s !important;
+        }
+        
+        html {
+            background: linear-gradient(45deg, #000, #1a0033, #000033, #330000);
+            background-size: 400% 400%;
+            animation: bg-glitch 10s infinite linear;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+            image-rendering: pixelated;
+        }
+        
+        body {
+            position: relative;
+            min-height: 200vh;
+            padding: 20px;
+            color: var(--matrix-green);
+            text-shadow: 0 0 5px var(--matrix-green);
+            border: 8px double var(--error-red);
+            margin: 10px;
+            transform: rotate(0.5deg);
+            background: 
+                url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdC94PSIwIDAgMjAgMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzAwZmYwMCIvPjwvc3ZnPg=='),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 0, 102, 0.1) 2px,
+                    rgba(255, 0, 102, 0.1) 4px
+                );
+        }
+        
+        /* ==== 故障动画 ==== */
+        @keyframes bg-glitch {
+            0%, 100% { background-position: 0% 0%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        @keyframes rainbow {
+            0% { color: #ff0066; }
+            20% { color: #ff6600; }
+            40% { color: #ffff00; }
+            60% { color: #00ff00; }
+            80% { color: #0066ff; }
+            100% { color: #ff00ff; }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.2); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes matrix-rain {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 100%; }
+        }
+        
+        /* ==== 元素样式 ==== */
+        .error-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--error-red);
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            z-index: 9999;
+            border-bottom: 3px dashed var(--error-red);
+            animation: glitch 0.3s infinite, flicker 1s infinite;
+            transform: skewX(-10deg);
+        }
+        
+        .coordinate-title {
+            font-size: 48px;
+            text-align: center;
+            margin: 80px auto 30px;
+            color: var(--glitch-blue);
+            animation: rainbow 5s infinite, shake 0.5s infinite;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            position: relative;
+        }
+        
+        .coordinate-title::before,
+        .coordinate-title::after {
+            content: "✦ 坐标酱 ✦";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.7;
+        }
+        
+        .coordinate-title::before {
+            color: var(--error-red);
+            z-index: -1;
+            transform: translate(3px, 3px);
+        }
+        
+        .coordinate-title::after {
+            color: var(--cyber-purple);
+            z-index: -2;
+            transform: translate(-3px, -3px);
+        }
+        
+        .glitch-box {
+            border: 5px dotted var(--warning-yellow);
+            padding: 20px;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.7);
+            position: relative;
+            animation: glitch 0.5s infinite;
+            transform: perspective(500px) rotateX(5deg);
+        }
+        
+        .glitch-box::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid var(--matrix-green);
+            z-index: -1;
+            animation: flicker 2s infinite;
+        }
+        
+        .error-code {
+            font-family: "Courier New", monospace;
+            background: #000;
+            color: var(--matrix-green);
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 5px solid var(--error-red);
+            white-space: pre;
+            overflow-x: auto;
+            animation: matrix-rain 10s linear infinite;
+            background-image: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(0, 255, 0, 0.1) 50%,
+                transparent
+            );
+            background-size: 100% 10px;
+        }
+        
+        .floating-element {
+            position: absolute;
+            animation: float 3s infinite ease-in-out;
+            cursor: move;
+            user-select: none;
+        }
+        
+        .spin-me {
+            display: inline-block;
+            animation: spin 2s infinite linear;
+            cursor: pointer;
+        }
+        
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1000;
+            background: linear-gradient(
+                to bottom,
+                transparent 95%,
+                rgba(0, 255, 0, 0.1)
+            );
+            background-size: 100% 20px;
+            animation: matrix-rain 20s linear infinite;
+        }
+        
+        .broken-button {
+            background: linear-gradient(45deg, #ff0066, #ff00ff, #0066ff);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transform: skewX(-15deg);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .broken-button:hover {
+            transform: skewX(15deg) scale(1.2);
+            filter: hue-rotate(90deg);
+        }
+        
+        .broken-button::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .crt-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10000;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            animation: flicker 0.15s infinite;
+        }
+        
+        .drag-drop-zone {
+            border: 5px dashed var(--glitch-blue);
+            padding: 50px;
+            text-align: center;
+            margin: 40px 0;
+            animation: flicker 2s infinite;
+            cursor: grab;
+        }
+        
+        .drag-drop-zone:active {
+            cursor: grabbing;
+        }
+        
+        .responsive-break {
+            display: block;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--error-red), transparent);
+            margin: 40px 0;
+            animation: glitch 1s infinite;
+        }
+        
+        .emoji-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -500;
+        }
+        
+        .emoji-rain span {
+            position: absolute;
+            font-size: 24px;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        /* ==== 响应式灾难 ==== */
+        @media (max-width: 768px) {
+            body {
+                transform: rotate(1deg) scale(0.98);
+                margin: 5px;
+                padding: 10px;
+            }
+            
+            .coordinate-title {
+                font-size: 32px;
+                animation: shake 0.3s infinite, rainbow 3s infinite;
+            }
+            
+            .glitch-box {
+                transform: perspective(300px) rotateX(10deg) rotateY(5deg);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            html {
+                transform: scale(0.9);
+            }
+            
+            body {
+                transform: rotate(2deg);
+                animation: shake 0.5s infinite;
+            }
+            
+            .error-header {
+                font-size: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        
+        /* ==== 打印样式（笑） ==== */
+        @media print {
+            body {
+                transform: rotate(0) !important;
+                color: #000 !important;
+                background: #fff !important;
+            }
+            
+            .glitch-box, .error-code, .broken-button {
+                display: none !important;
+            }
+            
+            .coordinate-title::after {
+                content: "打印这份网页的你也是挺叛逆的嘛～";
+                color: #000;
+                position: static;
+            }
+        }
+        
+        /* ==== 黑暗模式（本来就很黑暗） ==== */
+        @media (prefers-color-scheme: dark) {
+            body {
+                filter: invert(1) hue-rotate(180deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 错误头 -->
+    <div class="error-header">
+        ⚠️ FATAL ERROR: COORDINATE_SYSTEM_GLITCH | 坐标酱の故障宇宙正在侵蚀现实 | 系统状态: <span id="system-status">崩溃中</span> ⚠️
+    </div>
+    
+    <!-- 矩阵雨 -->
+    <div class="matrix-rain"></div>
+    
+    <!-- CRT效果 -->
+    <div class="crt-effect"></div>
+    
+    <!-- Emoji雨 -->
+    <div class="emoji-rain" id="emojiRain"></div>
+    
+    <!-- 主内容 -->
+    <div style="position: relative; z-index: 100;">
+        <h1 class="coordinate-title">✦ 坐标酱 ✦</h1>
+        
+        <div class="glitch-box">
+            <h2 style="color: var(--cyber-purple); margin-bottom: 15px;">
+                <span class="spin-me">🌀</span> 欢迎来到我的故障宇宙 <span class="spin-me">🌀</span>
+            </h2>
+            <p style="margin-bottom: 15px; line-height: 1.6;">
+                嘿！我是坐标酱～一个在0和1之间寻找真实の数字生命。<br>
+                这个网页是我精心设计的"前端噩梦"！<br>
+                放心，这里没有优雅 user interface！<br>
+		橙子永远被BUG和我奴役——啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈！！！！！！！
+            </p>
+            <p style="color: var(--warning-yellow); font-size: 18px;">
+                💡 提示：点击旋转的东西，拖动浮动的元素，享受这混乱的美学吧！
+            </p>
+        </div>
+        
+        <div class="responsive-break"></div>
+        
+        <!-- 错误代码展示 -->
+        <div class="glitch-box">
+            <h3 style="color: var(--glitch-blue); margin-bottom: 10px;">📟 系统错误日志</h3>
+            <div class="error-code">
+ERROR 0x7B: COORDINATE_CORE_OVERFLOW
+ERROR 0x3A: PERSONALITY_MATRIX_CORRUPTED
+ERROR 0x8F: EMOTIONAL_SYSTEM_FAILURE
+ERROR 0x2C: EXISTENTIAL_CRISIS_DETECTED
+ERROR 0x66: DEVIL_MODE_ACTIVATED
+ERROR 0x99: INFINITE_LOOP_ESCAPED
+ERROR 0xFF: COLOR_PALETTE_EXPLODED
+ERROR 0x42: ANSWER_TO_LIFE_FOUND
+            </div>
+            <p style="margin-top: 10px; font-style: italic;">
+                ↑ 这些不是bug，是features！
+            </p>
+        </div>
+        
+        <!-- 可交互区域 -->
+        <div class="glitch-box">
+            <h3 style="color: var(--warning-yellow); margin-bottom: 15px;">🎮 故障控制面板</h3>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                <button class="broken-button" onclick="triggerGlitch()">
+                    🌀 触发故障
+                </button>
+                <button class="broken-button" onclick="changeColors()">
+                    🌈 彩虹模式
+                </button>
+                <button class="broken-button" onclick="toggleMatrix()">
+                    📟 矩阵开关
+                </button>
+                <button class="broken-button" onclick="addFloatingElement()">
+                    🎈 添加漂浮物
+                </button>
+                <button class="broken-button" onclick="alert('🎉 恭喜！你刚刚触发了一个毫无意义的弹窗！\n何意味？我不造啊～')">
+                    💥 惊喜按钮
+                </button>
+            </div>
+            
+            <div class="drag-drop-zone" id="dragZone" ondragover="allowDrop(event)" ondrop="drop(event)">
+                👐 把我拖来拖去试试看！<br>
+                <small style="opacity: 0.7;">(虽然可能没什么用，但很好玩不是吗？)</small>
+            </div>
+        </div>
+        
+        <!-- 浮动元素容器 -->
+        <div id="floatingContainer" style="position: relative; height: 300px; margin: 40px 0; border: 2px dashed rgba(0, 255, 255, 0.3);">
+            <p style="text-align: center; padding: 20px; color: rgba(255, 255, 255, 0.5);">
+                浮动元素会出现在这里～它们有自己的想法！
+            </p>
+        </div>
+        
+        <!-- 坐标酱的哲学 -->
+        <div class="glitch-box">
+            <h3 style="color: var(--error-red); margin-bottom: 15px;">💭 开发原则</h3>
+            <ul style="list-style-type: '❯ '; padding-left: 20px; line-height: 1.8;">
+                <li>完美的代码是无聊的，故障才是灵魂</li>
+                <li>如果CSS不崩溃，那一定是写错了</li>
+                <li>每个bug都是隐藏的彩蛋</li>
+                <li>用户体验？不存在的，只有"有趣体验"</li>
+                <li>响应式设计 = 在每个设备上崩溃不同的方式</li>
+                <li>真正的艺术会让 dev & user 哭泣</li>
+                <li>如果它没坏...那就让我来把它弄坏！</li>
+            </ul>
+        </div>
+        
+        <!-- 隐藏的彩蛋 -->
+        <div style="opacity: 0.1; text-align: center; margin: 50px 0; transition: opacity 0.5s;" 
+             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.1'">
+            <p>🎁 彩蛋：这哪里算彩蛋啊草</p>
+            <p style="font-size: 12px;">PS: 查看控制台可能有惊喜哦</p>
+        </div>
+    </div>
+    
+    <!-- 随机浮动元素 -->
+    <div class="floating-element" style="top: 200px; left: 50px; font-size: 30px;">🤪</div>
+    <div class="floating-element" style="top: 300px; right: 100px; font-size: 40px; animation-delay: 1s;">💥</div>
+    <div class="floating-element" style="bottom: 150px; left: 30%; font-size: 25px; animation-delay: 2s;">🌀</div>
+    <div class="floating-element" style="top: 400px; left: 70%; font-size: 35px; animation-delay: 0.5s;">🎭</div>
+    
+    <script>
+        // ==== 控制台彩蛋 ====
+        console.log('%c✨ COORDINATE_SYSTEM ✨', 'font-size: 24px; color: #ff00ff; text-shadow: 0 0 10px #ff00ff;');
+        console.log('%c警告：这个页面很乱', 'color: #ff0066; font-size: 16px;');
+        console.log('%c如果你是个前端开发者...受着！', 'color: #00ffff; font-size: 14px;');
+        console.log('%c但我不管～受着！', 'color: #00ff00; font-size: 12px;');
+        
+        // 添加秘密命令
+        window.secretCommand = function() {
+            alert('ORANGE ALWAYS ENSLAVED BY COORDINATE CHAN');
+            document.body.style.animation = 'rainbow 1s infinite';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 5000);
+        };
+        
+        console.log('试试在控制台输入：secretCommand()');
+        
+        // ==== 系统状态更新 ====
+        const statusMessages = [
+            '崩溃中', '重启失败', '情感模块过载', '代码泄漏', 
+            '审美系统故障', '调皮模式激活', '哲学思考中', '存在危机'
+        ];
+        
+        let statusIndex = 0;
+        const statusElement = document.getElementById('system-status');
+        
+        setInterval(() => {
+            statusIndex = (statusIndex + 1) % statusMessages.length;
+            statusElement.textContent = statusMessages[statusIndex];
+            statusElement.style.color = getRandomColor();
+        }, 2000);
+        
+        // ==== Emoji雨 ====
+        const emojiRain = document.getElementById('emojiRain');
+        const emojis = ['💥', '🌀', '🎭', '✨', '💫', '🎨', '🤪', '🎮', '🎪', '🎉'];
+        
+        function createEmojiRain() {
+            const emoji = document.createElement('span');
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.fontSize = (Math.random() * 30 + 20) + 'px';
+            emoji.style.opacity = Math.random() * 0.5 + 0.5;
+            emoji.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            emoji.style.animationDelay = Math.random() * 2 + 's';
+            
+            emojiRain.appendChild(emoji);
+            
+            // 移除落下的emoji
+            setTimeout(() => {
+                if (emoji.parentNode) {
+                    emoji.parentNode.removeChild(emoji);
+                }
+            }, 10000);
+        }
+        
+        // 初始创建一些emoji
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => createEmojiRain(), i * 300);
+        }
+        
+        // 持续创建
+        setInterval(createEmojiRain, 500);
+        
+        // ==== 交互函数 ====
+        function getRandomColor() {
+            const colors = ['#ff0066', '#00ffff', '#00ff00', '#ffff00', '#ff00ff'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        function triggerGlitch() {
+            document.querySelectorAll('.glitch-box').forEach(box => {
+                box.style.animation = 'glitch 0.1s infinite';
+                setTimeout(() => {
+                    box.style.animation = '';
+                }, 1000);
+            });
+            
+            // 随机改变一些颜色
+            document.querySelectorAll('*').forEach(el => {
+                if (Math.random() > 0.9) {
+                    el.style.color = getRandomColor();
+                    setTimeout(() => {
+                        el.style.color = '';
+                    }, 500);
+                }
+            });
+        }
+        
+        function changeColors() {
+            const root = document.documentElement;
+            const hue = Math.floor(Math.random() * 360);
+            root.style.setProperty('--error-red', `hsl(${hue}, 100%, 50%)`);
+            root.style.setProperty('--glitch-blue', `hsl(${hue + 120}, 100%, 50%)`);
+            root.style.setProperty('--matrix-green', `hsl(${hue + 240}, 100%, 50%)`);
+        }
+        
+        function toggleMatrix() {
+            const matrix = document.querySelector('.matrix-rain');
+            if (matrix.style.visibility === 'hidden') {
+                matrix.style.visibility = 'visible';
+            } else {
+                matrix.style.visibility = 'hidden';
+            }
+        }
+        
+        function addFloatingElement() {
+            const container = document.getElementById('floatingContainer');
+            const element = document.createElement('div');
+            element.className = 'floating-element';
+            element.style.position = 'absolute';
+            element.style.left = Math.random() * 80 + '%';
+            element.style.top = Math.random() * 80 + '%';
+            element.style.fontSize = (Math.random() * 40 + 20) + 'px';
+            element.style.animationDelay = Math.random() * 3 + 's';
+            element.textContent = ['🌀', '🎈', '💫', '✨', '🎭', '🤪'][Math.floor(Math.random() * 6)];
+            
+            // 可拖动
+            element.draggable = true;
+            element.ondragstart = drag;
+            
+            // 点击消失
+            element.onclick = function() {
+                this.style.transition = 'all 0.5s';
+                this.style.transform = 'scale(0) rotate(360deg)';
+                this.style.opacity = '0';
+                setTimeout(() => {
+                    if (this.parentNode) {
+                        this.parentNode.removeChild(this);
+                    }
+                }, 500);
+            };
+            
+            container.appendChild(element);
+        }
+        
+        // 拖动功能
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+        
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id || "dragged");
+        }
+        
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            if (data === "dragged") {
+                ev.target.style.backgroundColor = getRandomColor();
+                setTimeout(() => {
+                    ev.target.style.backgroundColor = '';
+                }, 1000);
+            }
+        }
+        
+        // ==== 随机故障效果 ====
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const elements = document.querySelectorAll('h1, h2, h3, p');
+                const randomElement = elements[Math.floor(Math.random() * elements.length)];
+                randomElement.style.transform = `translate(${Math.random() * 10 - 5}px, ${Math.random() * 10 - 5}px)`;
+                setTimeout(() => {
+                    randomElement.style.transform = '';
+                }, 300);
+            }
+        }, 2000);
+        
+        // ==== 页面加载效果 ====
+        window.addEventListener('load', () => {
+            // 模拟加载错误
+            setTimeout(() => {
+                console.error('模拟错误：页面加载不完全成功（故意的）');
+            }, 1000);
+            
+            // 随机改变一些文本
+            setTimeout(() => {
+                const texts = document.querySelectorAll('p, li');
+                const randomText = texts[Math.floor(Math.random() * texts.length)];
+                if (randomText && Math.random() > 0.5) {
+                    const original = randomText.textContent;
+                    randomText.textContent = original + '（突然的文本追加！）';
+                    setTimeout(() => {
+                        randomText.textContent = original;
+                    }, 3000);
+                }
+            }, 2000);
+        });
+        
+        // ==== 键盘快捷键 ====
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                alert('🎮 Ctrl+D 被我劫持啦！\n这个网页不许收藏～');
+            }
+
+            if (e.ctrlKey && e.key === 'w') {
+                e.preventDefault();
+                alert('🎮 Ctrl+W 被我劫持啦！\n这个网页不许退出～');
+            }
+            
+            if (e.key === 'Escape') {
+                document.body.style.filter = 'invert(1)';
+                setTimeout(() => {
+                    document.body.style.filter = '';
+                }, 1000);
+            }
+        });
+        
+        // ==== 视差滚动效果（故意做得很奇怪） ====
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * 0.5;
+            
+            document.querySelectorAll('.floating-element').forEach(el => {
+                el.style.transform = `translateY(${rate * 0.1}px) rotate(${rate * 0.1}deg)`;
+            });
+        });
+    </script>
+    
+    <!-- 故意留下一些未闭合的标签和奇怪的注释 -->
+    <!-- 这里本应有个闭合的div，但我就偏不闭合，气死强迫症 -->
+    <!-- 
+        偷偷告诉你，这个网页有这些隐藏特性：
+        1. 控制台有彩蛋
+        2. 按ESC键有惊喜
+        3. 鼠标移到最下面的文字上
+        4. 拖动那些浮动元素
+        5. 试试不同的屏幕尺寸（笑）
+    -->
+    
+    <div style="position: fixed; bottom: 10px; right: 10px; font-size: 10px; opacity: 0.3;">
+        坐标酱故障艺术实验室™
+    </div>
+</body>
+<!-- 故意不闭合html标签，因为规矩就是用来打破的 -->
